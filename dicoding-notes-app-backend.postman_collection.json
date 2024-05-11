@@ -1,0 +1,788 @@
+{
+	"info": {
+		"_postman_id": "7221fe47-5520-4e65-a108-db720d508695",
+		"name": "dicoding-notes-app-backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8596816"
+	},
+	"item": [
+		{
+			"name": "addNote",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status should have 201 value', () => {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('response Content-Type header should have application/json value', () => {",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+							"});",
+							"",
+							"pm.test('response body should be an object', () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body should have correct property and value', () => {",
+							"    const responseJson = pm.response.json();",
+							"",
+							"    pm.expect(responseJson).to.ownProperty('status');",
+							"    pm.expect(responseJson.status).to.equals('success');",
+							"",
+							"    pm.expect(responseJson).to.ownProperty('message');",
+							"    pm.expect(responseJson.message).to.equals('Catatan berhasil ditambahkan');",
+							"",
+							"    pm.expect(responseJson).to.ownProperty('data');",
+							"    pm.expect(responseJson.data).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body data should have noteId property and not equal to empty', () => {",
+							"    const responseJson = pm.response.json();",
+							"    const { data } = responseJson;",
+							"",
+							"    pm.expect(data).to.ownProperty('noteId');",
+							"    pm.expect(data).to.not.equals('');",
+							"",
+							"    pm.environment.set('noteId', data.noteId);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "841d900d-fbc1-4d22-9fdc-29565afe4f94"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Catatan A\",\n    \"tags\": [\"tag1\", \"tag2\"],\n    \"body\": \"Ini adalah isi dari catatan A.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Catatan 1\",\n    \"tags\": [\"tag1\", \"tag2\"],\n    \"body\": \"Ini adalah contoh dari catatan 1.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/notes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "98"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 11 May 2024 14:33:53 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Catatan berhasil ditambahkan\",\n    \"data\": {\n        \"noteId\": \"yJNDEBkbg7yY_ILF\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "getAllNotes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 200 value', () => {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('response Content-Type header should ahve application/json value', () => {",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+							"});",
+							"",
+							"pm.test('response body should an object', () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body should have the correct property and value', () => {",
+							"  const responseJson = pm.response.json();",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('status');",
+							"  pm.expect(responseJson.status).to.equals('success');",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('data');",
+							"  pm.expect(responseJson.data).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body data should have a notes array and contain a least 1 item', () => {",
+							"  const responseJson = pm.response.json();",
+							"  const { data } = responseJson;",
+							"",
+							"  pm.expect(data).to.have.ownProperty('notes');",
+							"  pm.expect(data.notes).to.be.an('array');",
+							"  pm.expect(data.notes).lengthOf.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "aec0f7e2-b175-4b39-8017-163563b2f062"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/notes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "602"
+						},
+						{
+							"key": "accept-ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 11 May 2024 11:43:31 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"notes\": [\n            {\n                \"id\": \"SEHRbAE3UPUYtxpL\",\n                \"title\": \"Catatan 1\",\n                \"body\": \"Ini adalah contoh dari catatan 1.\",\n                \"tags\": [\n                    \"tag1\",\n                    \"tag2\"\n                ],\n                \"createdAt\": \"2024-05-11T11:37:57.068Z\",\n                \"updatedAt\": \"2024-05-11T11:42:41.459Z\"\n            },\n            {\n                \"id\": \"7RXAdjla5PSoZZwl\",\n                \"title\": \"Catatan 2\",\n                \"body\": \"Ini adalah contoh dari catatan 2.\",\n                \"tags\": [\n                    \"tag2\"\n                ],\n                \"createdAt\": \"2024-05-11T11:39:09.141Z\",\n                \"updatedAt\": \"2024-05-11T11:43:27.249Z\"\n            },\n            {\n                \"id\": \"vQIQc56RNB1LaHkA\",\n                \"title\": \"Catatan 3\",\n                \"body\": \"Ini adalah contoh dari catatan 3.\",\n                \"tags\": [\n                    \"tag1\",\n                    \"tag2\"\n                ],\n                \"createdAt\": \"2024-05-11T11:39:21.223Z\",\n                \"updatedAt\": \"2024-05-11T11:42:17.640Z\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "getNoteById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 200 value', () => {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('response Content-Type header should have application/json value', () => {",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+							"});",
+							"",
+							"pm.test('response body should be an object', () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body should have the correct property and value', () => {",
+							"  const responseJson = pm.response.json();",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('status');",
+							"  pm.expect(responseJson.status).to.equals('success');",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('data');",
+							"  pm.expect(responseJson.data).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body data should contain note object', () => {",
+							"  const responseJson = pm.response.json();",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('data');",
+							"  pm.expect(responseJson.data).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('note object should contain correct value for id, title, body and tags property', () => {",
+							"  const responseJson = pm.response.json();",
+							"  const { data } = responseJson;",
+							"",
+							"  const expectedId = pm.environment.get('noteId');",
+							"  const expectedTitle = 'Catatan A';",
+							"  const expectedTags = ['tag1', 'tag2'];",
+							"  const expectedBody = 'Ini adalah isi dari catatan A.';",
+							"",
+							"  pm.expect(data).to.have.ownProperty('id');",
+							"  pm.expect(data.id).to.equals(expectedId);",
+							"",
+							"  pm.expect(data).to.have.ownProperty('title');",
+							"  pm.expect(data.title).to.equals(expectedTitle);",
+							"",
+							"  pm.expect(data).to.have.ownProperty('tags');",
+							"  pm.expect(data.tags).to.eql(expectedTags);",
+							"",
+							"  pm.expect(data).to.have.ownProperty('body');",
+							"  pm.expect(data.body).to.equals(expectedBody);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "900498b8-0e94-4d8e-8178-22f0d65e81fe"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/notes/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{noteId}}",
+							"uuid": "685c9189-eee9-4e3a-b0dc-4b9b4fcd3c5d"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/notes/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "M154rQe_lZIhT5ez"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "217"
+						},
+						{
+							"key": "accept-ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 11 May 2024 11:51:56 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"id\": \"M154rQe_lZIhT5ez\",\n        \"title\": \"Catatan 1\",\n        \"body\": \"Ini adalah contoh dari catatan 1.\",\n        \"tags\": [\n            \"tag1\",\n            \"tag2\"\n        ],\n        \"createdAt\": \"2024-05-11T11:51:50.562Z\",\n        \"updatedAt\": \"2024-05-11T11:51:50.562Z\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "editNoteById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 202 value', () => {",
+							"  pm.response.to.have.status(202);",
+							"});",
+							"",
+							"pm.test('response Content-Type header should have application/json value', () => {",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+							"});",
+							"",
+							"pm.test('response body should be an object', () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body should have correct property and value', () => {",
+							"  const responseJson = pm.response.json();",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('status');",
+							"  pm.expect(responseJson.status).to.equals('success');",
+							"  pm.expect(responseJson).to.have.ownProperty('message');",
+							"  pm.expect(responseJson.message).to.equals('Catatan berhasil diperbaharui');",
+							"});",
+							"",
+							"pm.test('when request the updated note', () => {",
+							"  const noteId = pm.environment.get('noteId');",
+							"  pm.sendRequest(`http://localhost:5000/notes/${noteId}`, (error, response) => {",
+							"    if (!error) {",
+							"      pm.test('then the updated note should contain the latest data', () => {",
+							"        const responseJson = response.json();",
+							"        const { data } = responseJson;",
+							"",
+							"        const expectedTitle = 'Catatan A Revised';",
+							"        const expectedTags = ['tag3', 'tag4'];",
+							"        const expectedBody = 'Ini adalah isi dari catatan A revised.';",
+							"",
+							"        pm.expect(data.title).to.equals(expectedTitle);",
+							"        pm.expect(data.tags).to.eql(expectedTags);",
+							"        pm.expect(data.body).to.equals(expectedBody);",
+							"      });",
+							"    }",
+							"  });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "0b9c8090-5eb6-4487-ad60-c47779872aff"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Catatan A Revised\",\n    \"tags\": [\"tag3\", \"tag4\"],\n    \"body\": \"Ini adalah isi dari catatan A revised.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/notes/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{noteId}}",
+							"uuid": "b79d2fc1-0a68-41c8-a1fe-fe2fdb684365"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Catatan 1\",\n    \"tags\": [\"tag1\", \"tag2\"],\n    \"body\": \"Ini adalah contoh dari catatan 1.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/notes/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "SEHRbAE3UPUYtxpL"
+								}
+							]
+						}
+					},
+					"status": "Accepted",
+					"code": 202,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "62"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 11 May 2024 11:42:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Catatan berhasil diperbaharui\"\n}"
+				}
+			]
+		},
+		{
+			"name": "deleteNoteById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 200 value', () => {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('response Content-Type header should have application/json value', () => {",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+							"});",
+							"",
+							"pm.test('response body should be an object', () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson).to.be.an('object');",
+							"});",
+							"",
+							"pm.test('response body should have correct property and value', () => {",
+							"  const responseJson = pm.response.json();",
+							"",
+							"  pm.expect(responseJson).to.have.ownProperty('status');",
+							"  pm.expect(responseJson.status).to.equals('success');",
+							"  pm.expect(responseJson).to.have.ownProperty('message');",
+							"  pm.expect(responseJson.message).to.equals('Catatan berhasil dihapus');",
+							"});",
+							"",
+							"pm.test('when request the deleted note', () => {",
+							"  const noteId = pm.environment.get('noteId');",
+							"  pm.sendRequest(`http://localhost:5000/notes/${noteId}`, (error, response) => {",
+							"    if (!error) {",
+							"      pm.test('the deleted note should be not found', () => {",
+							"        pm.expect(response.code).to.equals(404);",
+							"",
+							"        const responseJson = response.json();",
+							"        pm.expect(responseJson.status).to.equals('fail');",
+							"        pm.expect(responseJson.message).to.equals('Catatan tidak ditemukan');",
+							"      });",
+							"    }",
+							"  });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "0040f7f4-55f8-46a9-a62f-c3f32267a039"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/notes/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{noteId}}",
+							"uuid": "f27b82b8-1c33-4a44-ae99-64bc23c73e8d"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/notes/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BluOZzS2JVJBIdgg"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "57"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 11 May 2024 12:04:30 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Catatan berhasil dihapus\"\n}"
+				}
+			]
+		}
+	]
+}
